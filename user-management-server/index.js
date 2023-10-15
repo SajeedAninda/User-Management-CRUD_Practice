@@ -47,6 +47,29 @@ async function run() {
             const result = await userCollection.deleteOne(query);
             res.send(result);
         })
+        app.get("/users/:id", async (req, res) => {
+            let id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await userCollection.findOne(query);
+            res.send(result);
+        });
+
+        app.put("/users/:id", async (req, res) => {
+            let id = req.params.id;
+            let user = req.body;
+            const options = { upsert: true };
+            const updateUsers = {
+                $set: {
+                    name: user.name,
+                    email: user.email,
+                    gender: user.gender,
+                    status: user.status
+                },
+            };
+            const filter = { _id: new ObjectId(id) };
+            const result = await userCollection.updateOne(filter, updateUsers, options);
+            res.send(result);
+        })
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
