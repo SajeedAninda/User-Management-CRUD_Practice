@@ -9,7 +9,7 @@ app.use(express.json());
 // PORT
 const port = 5000;
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://sajaninda:OHJawuylsfxy94rV@cluster0.ruhvmdy.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -40,6 +40,13 @@ async function run() {
             let result = await userCollection.find().toArray();
             res.send(result);
         });
+
+        app.delete("/users/:id", async (req, res) => {
+            let id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await userCollection.deleteOne(query);
+            res.send(result);
+        })
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
