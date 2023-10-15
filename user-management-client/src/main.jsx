@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Homepage from './Homepage.jsx';
+import CreateUser from './CreateUser.jsx';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Homepage></Homepage>,
+      },
+      {
+        path: "/newUser",
+        element: <CreateUser></CreateUser>,
       },
     ],
   },
