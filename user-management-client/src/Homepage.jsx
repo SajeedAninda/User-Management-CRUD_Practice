@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsFillPersonFill } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 
 
 const Homepage = () => {
-
+    let [users, setUsers] = useState([]);
+    useEffect(() => {
+        fetch("http://localhost:5000/users")
+            .then(res => res.json())
+            .then(data => setUsers(data));
+    }, [])
 
 
     return (
@@ -29,15 +34,21 @@ const Homepage = () => {
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {/* row 1 */}
-                            <tr>
-                                <th>1</th>
-                                <td>Cy Ganderton</td>
-                                <td>Quality Control Specialist</td>
-                                <td>Blue</td>
-                            </tr>
-                        </tbody>
+                        {
+                            users.map((user, idx) => <tbody>
+                                <tr>
+                                    <th>{idx + 1}</th>
+                                    <td>{user.name}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.gender}</td>
+                                    <td>{user.status}</td>
+                                    <td className='space-x-2'>
+                                    <button className="btn btn-active btn-primary">Update</button>
+                                        <button className="btn btn-error">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>)
+                        }
                     </table>
                 </div>
             </div>

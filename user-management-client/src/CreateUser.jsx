@@ -1,15 +1,32 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CreateUser = () => {
     let [genderValue, setGenderValue] = useState("");
     let [statusValue, setStatusValue] = useState("");
+    let navigate = useNavigate();
     let handleCreate = (e) => {
         e.preventDefault();
         let name = e.target.name.value;
         let email = e.target.email.value;
         let gender = genderValue;
         let status = statusValue;
-        console.log(name, email, gender, status);
+        let user = { name, email, gender, status };
+        fetch('http://localhost:5000/users', {
+            method: 'POST',
+            body: JSON.stringify(user),
+            headers: {
+                'Content-type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
+                if (json.insertedId) {
+                    alert("User Created");
+                    navigate("/");
+                }
+            });
     }
 
     return (
@@ -85,6 +102,11 @@ const CreateUser = () => {
                     <button className='bg-emerald-500 px-4 py-2 rounded-lg mt-3' type="submit">Submit</button>
                 </form>
             </div>
+            <Link className='flex justify-center' to={"/"}>
+                <button className='shadow-lg flex items-center gap-2 text-lg text-purple-700 px-3 py-2 rounded-lg border border-purple-500'>
+                    Go Back
+                </button>
+            </Link>
         </div>
     );
 };
