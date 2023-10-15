@@ -1,14 +1,13 @@
-let express = require("express");
-let cors = require("cors");
-let app = express();
+const express = require("express");
+const cors = require("cors");
+const app = express();
 
 // MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
-// PORT 
-let port = 5000;
-
+// PORT
+const port = 5000;
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://sajaninda:OHJawuylsfxy94rV@cluster0.ruhvmdy.mongodb.net/?retryWrites=true&w=majority";
@@ -28,6 +27,20 @@ async function run() {
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
+
+        const userCollection = client.db("userManagementDB").collection("users");
+
+        app.post("/users", async (req, res) => {
+            let users = req.body;
+            const result = await userCollection.insertOne(users);
+            res.send(result);
+        });
+
+        app.get("/users", async (req, res) => {
+            let result = await userCollection.find().toArray();
+            res.send(result);
+        });
+
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
@@ -35,7 +48,6 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
