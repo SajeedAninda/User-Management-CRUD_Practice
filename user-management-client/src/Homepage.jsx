@@ -11,6 +11,22 @@ const Homepage = () => {
             .then(data => setUsers(data));
     }, [])
 
+    let handleDelete = (id) => {
+        console.log(id);
+        fetch(`http://localhost:5000/users/${id}`, {
+            method: 'DELETE',
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data.deletedCount > 0) {
+                    alert("User Deleted");
+                    let remainingUsers = users.filter(user => user._id !== id);
+                    setUsers(remainingUsers);
+                }
+            });
+    }
+
 
     return (
         <div className='w-[70%] mx-auto py-10 flex flex-col gap-3'>
@@ -35,7 +51,7 @@ const Homepage = () => {
                             </tr>
                         </thead>
                         {
-                            users.map((user, idx) => <tbody>
+                            users.map((user, idx) => <tbody key={user._id}>
                                 <tr>
                                     <th>{idx + 1}</th>
                                     <td>{user.name}</td>
@@ -43,8 +59,8 @@ const Homepage = () => {
                                     <td>{user.gender}</td>
                                     <td>{user.status}</td>
                                     <td className='space-x-2'>
-                                    <button className="btn btn-active btn-primary">Update</button>
-                                        <button className="btn btn-error">Delete</button>
+                                        <button className="btn btn-active btn-primary">Update</button>
+                                        <button onClick={() => handleDelete(user._id)} className="btn btn-error">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>)
