@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom';
 const Homepage = () => {
     let [users, setUsers] = useState([]);
     useEffect(() => {
-        fetch("http://localhost:5000/users")
+        fetch("https://user-management-server-sajeed-enayet-anindas-projects.vercel.app/users")
             .then(res => res.json())
             .then(data => setUsers(data));
     }, [])
 
     let handleDelete = (id) => {
         console.log(id);
-        fetch(`http://localhost:5000/users/${id}`, {
+        fetch(`https://user-management-server-sajeed-enayet-anindas-projects.vercel.app/users/${id}`, {
             method: 'DELETE',
         })
             .then(res => res.json())
@@ -59,7 +59,7 @@ const Homepage = () => {
                                     <td>{user.gender}</td>
                                     <td>{user.status}</td>
                                     <td className='space-x-2'>
-                                        <button className="btn btn-active btn-primary">Update</button>
+                                        <Link to={`/updateUsers/${user._id}`}><button className="btn btn-active btn-primary">Update</button></Link>
                                         <button onClick={() => handleDelete(user._id)} className="btn btn-error">Delete</button>
                                     </td>
                                 </tr>

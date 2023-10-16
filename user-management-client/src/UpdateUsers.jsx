@@ -1,33 +1,39 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 
-const CreateUser = () => {
+const UpdateUsers = () => {
+    let userData = useLoaderData();
+    let { _id, name, email, gender, status } = userData;
+
     let [genderValue, setGenderValue] = useState("");
     let [statusValue, setStatusValue] = useState("");
     let navigate = useNavigate();
-    let handleCreate = (e) => {
+
+
+    let handleUpdate = (e) => {
         e.preventDefault();
         let name = e.target.name.value;
         let email = e.target.email.value;
         let gender = genderValue;
         let status = statusValue;
         let user = { name, email, gender, status };
-        fetch('https://user-management-server-sajeed-enayet-anindas-projects.vercel.app/users', {
-            method: 'POST',
+        fetch(`https://user-management-server-sajeed-enayet-anindas-projects.vercel.app/users/${_id}`, {
+            method: 'PUT',
             body: JSON.stringify(user),
             headers: {
-                'Content-type': 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
             },
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log(json);
-                if (json.insertedId) {
-                    alert("User Created");
-                    navigate("/");
+                console.log(json)
+                if (json.modifiedCount > 0) {
+                    alert("User Updated");
                 }
+                navigate("/");
             });
     }
+
 
     return (
         <div>
@@ -39,15 +45,15 @@ const CreateUser = () => {
             </div>
 
             <div className='py-6 w-[60%] mx-auto'>
-                <form onSubmit={handleCreate}>
+                <form onSubmit={handleUpdate}>
                     <div className='space-y-2'>
                         <label className='text-gray-500 text-lg' htmlFor="name">Name</label> <br />
-                        <input className='w-full py-1 rounded-md border border-gray-300' type="text" name='name' required />
+                        <input className='w-full py-1 rounded-md border border-gray-300' type="text" name='name' required defaultValue={name} />
                     </div>
 
                     <div className='space-y-2 mt-3'>
                         <label className='text-gray-500 text-lg' htmlFor="email">Email</label> <br />
-                        <input className='w-full py-1 rounded-md border border-gray-300' type="email" name='email' required />
+                        <input className='w-full py-1 rounded-md border border-gray-300' type="email" name='email' required defaultValue={email} />
                     </div>
 
                     <div className='pt-3 space-x-3 flex items-center text-lg'>
@@ -111,4 +117,4 @@ const CreateUser = () => {
     );
 };
 
-export default CreateUser;
+export default UpdateUsers;

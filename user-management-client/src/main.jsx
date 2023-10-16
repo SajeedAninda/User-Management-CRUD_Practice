@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Homepage from './Homepage.jsx';
 import CreateUser from './CreateUser.jsx';
+import UpdateUsers from './UpdateUsers.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
       {
         path: "/newUser",
         element: <CreateUser></CreateUser>,
+      },
+      {
+        path: "/updateUsers/:id",
+        loader: ({params})=>fetch(`https://user-management-server-sajeed-enayet-anindas-projects.vercel.app/users/${params.id}`),
+        element: <UpdateUsers></UpdateUsers>,
       },
     ],
   },
